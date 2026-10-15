@@ -1,0 +1,277 @@
+{
+  "_comment": "Register över NVDB-objekttyper i Trafikverkets Öppna API (datacache). 'verified' = svarar med data i namespace vägdata.nvdb_dk_o, schemaversion 1.2. Fält hämtas generiskt ur svaret.",
+  "namespace": "vägdata.nvdb_dk_o",
+  "schemaversion": "1.2",
+  "datasets": [
+    {
+      "id": "AntalKörfält2",
+      "title": "AntalKörfält2",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "BegränsadBruttovikt",
+      "title": "BegränsadBruttovikt",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "BegränsadFordonsbredd",
+      "title": "BegränsadFordonsbredd",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "BegränsadFordonslängd",
+      "title": "BegränsadFordonslängd",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "BegränsatAxelBoggitryck",
+      "title": "BegränsatAxelBoggitryck",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Bärighet",
+      "title": "Bärighet",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Cirkulationsplats",
+      "title": "Cirkulationsplats",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Cykelgata",
+      "title": "Cykelgata",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Farthinder",
+      "title": "Farthinder",
+      "geometry": "point",
+      "verified": true
+    },
+    {
+      "id": "Fordonståg_upp_till_34_5_m",
+      "title": "Fordonståg upp till 34 5 m",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "FunktionellVägklass",
+      "title": "FunktionellVägklass",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Färjeled",
+      "title": "Färjeled",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "FörbjudenFärdriktning",
+      "title": "FörbjudenFärdriktning",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Förbud_Mot_Omkörning",
+      "title": "Förbud Mot Omkörning",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Gatunamn",
+      "title": "Gatunamn",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Gatutyp",
+      "title": "Gatutyp",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "GCMVägtyp",
+      "title": "GCMVägtyp",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Gågata",
+      "title": "Gågata",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Gångfartsområde",
+      "title": "Gångfartsområde",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Hastighetsgräns",
+      "title": "Hastighetsgräns",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Huvudled",
+      "title": "Huvudled",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Höjdhinder_upp_till_45_dm",
+      "title": "Höjdhinder upp till 45 dm",
+      "geometry": "point",
+      "verified": true
+    },
+    {
+      "id": "Kontrollplats",
+      "title": "Kontrollplats",
+      "geometry": "point",
+      "verified": true
+    },
+    {
+      "id": "Korsning",
+      "title": "Korsning",
+      "geometry": "point",
+      "verified": true
+    },
+    {
+      "id": "Miljözon",
+      "title": "Miljözon",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Motortrafikled",
+      "title": "Motortrafikled",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Motorväg",
+      "title": "Motorväg",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Slitlager",
+      "title": "Slitlager",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Stopplikt",
+      "title": "Stopplikt",
+      "geometry": "point",
+      "verified": true
+    },
+    {
+      "id": "TättbebyggtOmråde",
+      "title": "TättbebyggtOmråde",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Vägbredd",
+      "title": "Vägbredd",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Väghinder",
+      "title": "Väghinder",
+      "geometry": "point",
+      "verified": true
+    },
+    {
+      "id": "Väghållare",
+      "title": "Väghållare",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Vägnummer",
+      "title": "Vägnummer",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Vägtrafiknät",
+      "title": "Vägtrafiknät",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Väjningsplikt",
+      "title": "Väjningsplikt",
+      "geometry": "point",
+      "verified": true
+    },
+    {
+      "id": "ÖvrigtVägnamn",
+      "title": "ÖvrigtVägnamn",
+      "geometry": "linestring",
+      "verified": true
+    },
+    {
+      "id": "Betalstation",
+      "title": "Betalstation",
+      "geometry": null,
+      "verified": false
+    },
+    {
+      "id": "Katastroföverfart",
+      "title": "Katastroföverfart",
+      "geometry": null,
+      "verified": false
+    },
+    {
+      "id": "PlankorsningVägJärnväg",
+      "title": "PlankorsningVägJärnväg",
+      "geometry": null,
+      "verified": false
+    },
+    {
+      "id": "Rastplatser",
+      "title": "Rastplatser",
+      "geometry": null,
+      "verified": false
+    },
+    {
+      "id": "Sidoanläggningsväg",
+      "title": "Sidoanläggningsväg",
+      "geometry": null,
+      "verified": false
+    },
+    {
+      "id": "Trafik",
+      "title": "Trafik",
+      "geometry": null,
+      "verified": false
+    },
+    {
+      "id": "Vägklasser_För_Trafik_Och_Skyddsanordningar",
+      "title": "Vägklasser För Trafik Och Skyddsanordningar",
+      "geometry": null,
+      "verified": false
+    },
+    {
+      "id": "Vägslag",
+      "title": "Vägslag",
+      "geometry": null,
+      "verified": false
+    }
+  ]
+}

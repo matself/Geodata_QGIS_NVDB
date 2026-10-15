@@ -1,0 +1,15 @@
+[general]
+name=Geodata: NVDB (Trafikverket)
+qgisMinimumVersion=3.34
+qgisMaximumVersion=4.99
+supportsQt6=True
+description=Search and download NVDB road data from Trafikverket's open API
+version=0.1.0
+author=Mats Elfström
+email=mats.elfstrom@gmail.com
+about=Download NVDB road data (speed limits, road numbers, road network and more) from Trafikverket's open API for the current map extent or all of Sweden, saved as GeoPackage in SWEREF 99 TM. Requires a free API key from data.trafikverket.se. The plugin is independent and not developed by Trafikverket.
+tracker=https://github.com/matself/Geodata_QGIS_NVDB/issues
+repository=https://github.com/matself/Geodata_QGIS_NVDB
+tags=nvdb,trafikverket,sweden,roads,open data
+category=Web
+experimental=True
