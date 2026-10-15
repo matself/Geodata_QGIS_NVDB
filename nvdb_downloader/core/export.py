@@ -25,11 +25,22 @@ def _field_type(value: Any) -> int:
     return ogr.OFTString
 
 
+def _unique_case_insensitive(attrs: dict[str, Any], wkt: str | None):
+    """GeoPackage field names are case-insensitive; keep the first of any clashing pair."""
+    seen: set[str] = set()
+    unique = {}
+    for key, value in attrs.items():
+        if key.lower() not in seen:
+            seen.add(key.lower())
+            unique[key] = value
+    return unique, wkt
+
+
 def write_gpkg(
     records: list[dict[str, Any]], path: Path, layer_name: str, geometry: str | None
 ) -> int:
     """Write records to `path`, replacing the file. Returns the number written."""
-    rows = [flatten(r) for r in records]
+    rows = [_unique_case_insensitive(*flatten(r)) for r in records]
     types: dict[str, int] = {}
     for attrs, _ in rows:
         for key, value in attrs.items():

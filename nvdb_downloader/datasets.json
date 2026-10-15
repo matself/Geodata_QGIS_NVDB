@@ -1,5 +1,5 @@
 {
-  "_comment": "Register över NVDB-objekttyper i Trafikverkets Öppna API (datacache). 'verified' = svarar med data i namespace vägdata.nvdb_dk_o, schemaversion 1.2. Fält hämtas generiskt ur svaret.",
+  "_comment": "Register över NVDB-objekttyper i Trafikverkets Öppna API (datacache). 'verified' = svarar med data. 'namespace' per typ överstyr toppnivåns namespace (Vägdata.AGGREGAT_O, Vägdata.VIS_DK_O, Vägdata.TRAFIK_DK_O). Fält hämtas generiskt ur svaret.",
   "namespace": "vägdata.nvdb_dk_o",
   "schemaversion": "1.2",
   "datasets": [
@@ -32,6 +32,13 @@
       "title": "BegränsatAxelBoggitryck",
       "geometry": "linestring",
       "verified": true
+    },
+    {
+      "id": "Betalstation",
+      "title": "Betalstation",
+      "geometry": "point",
+      "verified": true,
+      "namespace": "Vägdata.VIS_DK_O"
     },
     {
       "id": "Bärighet",
@@ -136,6 +143,13 @@
       "verified": true
     },
     {
+      "id": "Katastroföverfart",
+      "title": "Katastroföverfart",
+      "geometry": "point",
+      "verified": true,
+      "namespace": "Vägdata.VIS_DK_O"
+    },
+    {
       "id": "Kontrollplats",
       "title": "Kontrollplats",
       "geometry": "point",
@@ -166,6 +180,27 @@
       "verified": true
     },
     {
+      "id": "PlankorsningVägJärnväg",
+      "title": "PlankorsningVägJärnväg",
+      "geometry": "point",
+      "verified": true,
+      "namespace": "Vägdata.AGGREGAT_O"
+    },
+    {
+      "id": "Rastplatser",
+      "title": "Rastplatser",
+      "geometry": "point",
+      "verified": true,
+      "namespace": "Vägdata.VIS_DK_O"
+    },
+    {
+      "id": "Sidoanläggningsväg",
+      "title": "Sidoanläggningsväg",
+      "geometry": "linestring",
+      "verified": true,
+      "namespace": "Vägdata.VIS_DK_O"
+    },
+    {
       "id": "Slitlager",
       "title": "Slitlager",
       "geometry": "linestring",
@@ -176,6 +211,13 @@
       "title": "Stopplikt",
       "geometry": "point",
       "verified": true
+    },
+    {
+      "id": "Trafik",
+      "title": "Trafik",
+      "geometry": "linestring",
+      "verified": true,
+      "namespace": "Vägdata.TRAFIK_DK_O"
     },
     {
       "id": "TättbebyggtOmråde",
@@ -202,10 +244,24 @@
       "verified": true
     },
     {
+      "id": "Vägklasser_För_Trafik_Och_Skyddsanordningar",
+      "title": "Vägklasser För Trafik Och Skyddsanordningar",
+      "geometry": "linestring",
+      "verified": true,
+      "namespace": "Vägdata.VIS_DK_O"
+    },
+    {
       "id": "Vägnummer",
       "title": "Vägnummer",
       "geometry": "linestring",
       "verified": true
+    },
+    {
+      "id": "Vägslag",
+      "title": "Vägslag",
+      "geometry": "linestring",
+      "verified": true,
+      "namespace": "Vägdata.AGGREGAT_O"
     },
     {
       "id": "Vägtrafiknät",
@@ -224,54 +280,6 @@
       "title": "ÖvrigtVägnamn",
       "geometry": "linestring",
       "verified": true
-    },
-    {
-      "id": "Betalstation",
-      "title": "Betalstation",
-      "geometry": null,
-      "verified": false
-    },
-    {
-      "id": "Katastroföverfart",
-      "title": "Katastroföverfart",
-      "geometry": null,
-      "verified": false
-    },
-    {
-      "id": "PlankorsningVägJärnväg",
-      "title": "PlankorsningVägJärnväg",
-      "geometry": null,
-      "verified": false
-    },
-    {
-      "id": "Rastplatser",
-      "title": "Rastplatser",
-      "geometry": null,
-      "verified": false
-    },
-    {
-      "id": "Sidoanläggningsväg",
-      "title": "Sidoanläggningsväg",
-      "geometry": null,
-      "verified": false
-    },
-    {
-      "id": "Trafik",
-      "title": "Trafik",
-      "geometry": null,
-      "verified": false
-    },
-    {
-      "id": "Vägklasser_För_Trafik_Och_Skyddsanordningar",
-      "title": "Vägklasser För Trafik Och Skyddsanordningar",
-      "geometry": null,
-      "verified": false
-    },
-    {
-      "id": "Vägslag",
-      "title": "Vägslag",
-      "geometry": null,
-      "verified": false
     }
   ]
 }

@@ -23,12 +23,14 @@ def build_request(
     skip: int = 0,
     bbox: tuple[float, float, float, float] | None = None,
 ) -> str:
-    """XML request for one page. `bbox` is (xmin, ymin, xmax, ymax) in SWEREF 99 TM."""
+    """XML request for one page. `bbox` is (xmin, ymin, xmax, ymax) in SWEREF 99 TM.
+
+    Uses INTERSECTS so objects crossing the box edge are included (WITHIN drops them)."""
     if bbox:
         xmin, ymin, xmax, ymax = bbox
         value = f"{xmin:.1f} {ymin:.1f}, {xmax:.1f} {ymax:.1f}"
         within = (
-            f'<WITHIN name="{GEOMETRY_FIELD}" shape="box" value={quoteattr(value)}/>'
+            f'<INTERSECTS name="{GEOMETRY_FIELD}" shape="box" value={quoteattr(value)}/>'
         )
     else:
         within = ""

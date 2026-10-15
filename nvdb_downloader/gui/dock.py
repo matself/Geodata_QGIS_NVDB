@@ -1,4 +1,4 @@
-"""Dock widget: pick NVDB object types, an area and a folder, then download."""
+"""Dock widget with two tabs: raw NVDB tables, and emulated Topografi 10 layers."""
 
 from __future__ import annotations
 
@@ -28,6 +28,7 @@ from qgis.PyQt.QtWidgets import (
     QMessageBox,
     QPushButton,
     QRadioButton,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -35,7 +36,8 @@ from qgis.PyQt.QtWidgets import (
 from ..config import NVDB_CRS, PLUGIN_NAME, SETTINGS_PREFIX
 from ..core.auth import load_api_key, store_api_key
 from ..core.registry import load_registry
-from ..core.task import DownloadTask
+from ..core.task import DownloadTask, SourceSpec
+from ..core.topo10 import RECIPES, recipe
 
 S_AUTHCFG = f"{SETTINGS_PREFIX}/authcfg"
 S_OUTDIR = f"{SETTINGS_PREFIX}/output_dir"
@@ -61,11 +63,16 @@ class NvdbDock(QDockWidget):
         row.addWidget(key_button)
         layout.addLayout(row)
 
+        self.tabs = QTabWidget()
+        layout.addWidget(self.tabs, 1)
+
+        # Tab 1: raw data, any NVDB table
+        raw = QWidget()
+        raw_layout = QVBoxLayout(raw)
         self.search = QLineEdit()
         self.search.setPlaceholderText("Sök objekttyp…")
         self.search.textChanged.connect(self._filter)
-        layout.addWidget(self.search)
-
+        raw_layout.addWidget(self.search)
         self.list = QListWidget()
         self.list.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         for d in self.registry.datasets:
@@ -74,7 +81,23 @@ class NvdbDock(QDockWidget):
             item = QListWidgetItem(d.title)
             item.setData(Qt.ItemDataRole.UserRole, d.id)
             self.list.addItem(item)
-        layout.addWidget(self.list, 1)
+        raw_layout.addWidget(self.list, 1)
+        self.tabs.addTab(raw, "Rådata")
+
+        # Tab 2: emulate Lantmäteriet's Topografi 10 layers from NVDB
+        topo = QWidget()
+        topo_layout = QVBoxLayout(topo)
+        topo_layout.addWidget(
+            QLabel("Bygger Topografi 10-skikt av NVDB-data och stilsätter dem som Topo10.")
+        )
+        self.topo_list = QListWidget()
+        self.topo_list.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        for r in RECIPES:
+            item = QListWidgetItem(r.title + (f" – {r.note}" if r.note else ""))
+            item.setData(Qt.ItemDataRole.UserRole, r.id)
+            self.topo_list.addItem(item)
+        topo_layout.addWidget(self.topo_list, 1)
+        self.tabs.addTab(topo, "Topo10-uttag")
 
         self.area_canvas = QRadioButton("Kartans nuvarande utsnitt")
         self.area_all = QRadioButton("Hela Sverige (kan vara stort)")
@@ -151,14 +174,32 @@ class NvdbDock(QDockWidget):
 
     # --- download --------------------------------------------------------
 
+    def _jobs(self):
+        """(title, layer_name, geometry, style, sources) per selected item in the current tab."""
+        reg = self.registry
+        jobs = []
+        if self.tabs.currentIndex() == 0:
+            for item in self.list.selectedItems():
+                d = reg.get(item.data(Qt.ItemDataRole.UserRole))
+                jobs.append((d.title, d.id, d.geometry, "", [SourceSpec(d.id, reg.namespace_of(d))]))
+        else:
+            for item in self.topo_list.selectedItems():
+                r = recipe(item.data(Qt.ItemDataRole.UserRole))
+                sources = [
+                    SourceSpec(s.dataset_id, reg.namespace_of(reg.get(s.dataset_id)), s.transform)
+                    for s in r.sources
+                ]
+                jobs.append((r.title, r.layer_name, r.geometry, r.style, sources))
+        return jobs
+
     def _download(self) -> None:
         key = self._api_key()
         if not key:
             QMessageBox.information(self, PLUGIN_NAME, "Ange en API-nyckel först.")
             return
-        selected = [self.registry.get(i.data(Qt.ItemDataRole.UserRole)) for i in self.list.selectedItems()]
-        if not selected:
-            QMessageBox.information(self, PLUGIN_NAME, "Välj minst en objekttyp.")
+        jobs = self._jobs()
+        if not jobs:
+            QMessageBox.information(self, PLUGIN_NAME, "Välj minst en post i listan.")
             return
         if self.area_all.isChecked():
             answer = QMessageBox.question(
@@ -173,13 +214,13 @@ class NvdbDock(QDockWidget):
         stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         self.button.setEnabled(False)
-        self._pending = len(selected)
-        for dataset in selected:
+        self._pending = len(jobs)
+        for title, layer_name, geometry, style, sources in jobs:
             task = DownloadTask(
-                key, self.registry.namespace, self.registry.schemaversion,
-                dataset, bbox, out, stamp,
+                title, key, self.registry.schemaversion, sources, layer_name, geometry,
+                bbox, out, stamp, style,
             )
-            task.status.connect(lambda text, d=dataset: self.status.setText(f"{d.title}: {text}"))
+            task.status.connect(lambda text, t=title: self.status.setText(f"{t}: {text}"))
             task.completed.connect(self._on_completed)
             task.failed.connect(self._on_failed)
             self._tasks.append(task)
@@ -191,11 +232,14 @@ class NvdbDock(QDockWidget):
             self.button.setEnabled(True)
             self._tasks.clear()
 
-    def _on_completed(self, gpkg: str, layer_name: str, count: int) -> None:
+    def _on_completed(self, gpkg: str, layer_name: str, count: int, style: str) -> None:
         self.status.setText(f"{layer_name}: {count} objekt sparade i {gpkg}")
         if self.add_to_map.isChecked():
             layer = QgsVectorLayer(f"{gpkg}|layername={layer_name}", layer_name, "ogr")
             if layer.isValid():
+                qml = Path(__file__).resolve().parent.parent / "styles" / f"{style}.qml"
+                if style and qml.exists():
+                    layer.loadNamedStyle(str(qml))
                 QgsProject.instance().addMapLayer(layer)
         self._task_done()
 

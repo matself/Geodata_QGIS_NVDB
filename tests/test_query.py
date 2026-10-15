@@ -1,6 +1,7 @@
 """Tests for the pure query helpers. Run: python -m unittest discover -s tests"""
 
 import importlib.util
+import sys
 import unittest
 from pathlib import Path
 
@@ -47,6 +48,45 @@ class ParseTest(unittest.TestCase):
         )
         self.assertEqual(attrs, {"GID": 1})
         self.assertEqual(wkt, "POINT Z (1 2 3)")
+
+
+_T = importlib.util.spec_from_file_location(
+    "topo10", Path(__file__).resolve().parent.parent / "nvdb_downloader" / "core" / "topo10.py"
+)
+topo10 = importlib.util.module_from_spec(_T)
+sys.modules["topo10"] = topo10  # dataclasses needs the module registered
+_T.loader.exec_module(topo10)
+
+
+class Topo10Test(unittest.TestCase):
+    def test_vaglinje_fields(self):
+        rec = topo10.vaglinje({"Typ": "Landsväg liten", "Avfartsväg_Påfartsväg": "Ja",
+                               "Bro_och_tunnel": None, "Gatunamn": "Storgatan"})
+        self.assertEqual(rec["objekttypnr"], 1805)
+        self.assertEqual(rec["bro_och_tunnel"], "Ingen information")
+        self.assertEqual(rec["avfartsvag_pafartsvag"], "Ja")
+        self.assertEqual(rec["gatunamn"], "Storgatan")
+        self.assertNotIn("Gatunamn", rec)  # renamed: GeoPackage fields are case-insensitive
+
+    def test_unknown_typ_is_unclassified(self):
+        self.assertEqual(topo10.vaglinje({"Typ": "Något nytt"})["objekttypnr"], 1816)
+
+    def test_vaghinder(self):
+        rec = topo10.vaghinder({"Hindertyp": "övrigt", "Feature_Oid": "1:2", "Geometry": {"g": 1}})
+        self.assertEqual((rec["objekttypnr"], rec["vaghindertyp"]), (2203, "övrigt hinder"))
+
+    def test_korsning_only_cirkulationsplats(self):
+        self.assertIsNone(topo10.cirkulationsplats({"Generaliseringstyp": "enkel korsning"}))
+        rec = topo10.cirkulationsplats({"Generaliseringstyp": "cirkulationsplats", "Namn": "X"})
+        self.assertEqual(rec["objekttypnr"], 2210)
+
+    def test_every_recipe_source_is_in_the_register(self):
+        import json
+        path = Path(__file__).resolve().parent.parent / "nvdb_downloader" / "datasets.json"
+        ids = {d["id"] for d in json.loads(path.read_text(encoding="utf-8"))["datasets"] if d["verified"]}
+        for r in topo10.RECIPES:
+            for source in r.sources:
+                self.assertIn(source.dataset_id, ids)
 
 
 if __name__ == "__main__":

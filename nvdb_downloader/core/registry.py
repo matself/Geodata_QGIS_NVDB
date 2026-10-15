@@ -15,6 +15,7 @@ class Dataset:
     title: str
     geometry: str | None  # "linestring" or "point"
     verified: bool = False
+    namespace: str | None = None  # overrides the register default
 
 
 @dataclass(frozen=True)
@@ -26,11 +27,17 @@ class Registry:
     def get(self, dataset_id: str) -> Dataset:
         return next(d for d in self.datasets if d.id == dataset_id)
 
+    def namespace_of(self, dataset: Dataset) -> str:
+        return dataset.namespace or self.namespace
+
 
 def load_registry(path: Path = REGISTRY_PATH) -> Registry:
     raw = json.loads(path.read_text(encoding="utf-8"))
     datasets = tuple(
-        Dataset(d["id"], d.get("title", d["id"]), d.get("geometry"), d.get("verified", False))
+        Dataset(
+            d["id"], d.get("title", d["id"]), d.get("geometry"),
+            d.get("verified", False), d.get("namespace"),
+        )
         for d in raw["datasets"]
     )
     return Registry(raw["namespace"], raw["schemaversion"], datasets)
